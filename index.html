@@ -58,6 +58,18 @@
           object-fit: cover; /* 滿版裁切 */
           display: block;
         }
+        .info-area {
+          width: 100%; /* 修正原本 100vw 可能超出問題 */
+          padding-right: 1.2rem; /* 增加右側內距，避免主按鈕貼邊 */
+          box-sizing: border-box;
+        }
+        .main-btn {
+          width: auto;
+          min-width: 40vw;
+          max-width: 90vw;
+          margin: 1.2rem 0 1rem 0; /* 移除右側 margin，避免超出 */
+          display: block;
+        }
       }
       /* 桌機、平板：內容高度=視窗高度，寬度依比例，無圓角無陰影。圖片永遠100%高自動拉寬，不管多小都放大 */
       @media (min-width: 769px) {
