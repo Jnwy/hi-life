@@ -221,6 +221,11 @@
       .main-btn:active {
         background: #dc5327;
       }
+      @media screen and (min-width: 769px) {
+        .main-btn {
+          width: 20vh;
+        }
+      }
       .info-area a {
         text-decoration: none;
       }
@@ -244,9 +249,8 @@
         flex-direction: row;
         align-items: center;
         justify-content: stretch;
-        width: 23rem;
+        width: 16rem;
         height: fit-content;
-        min-height: 6rem;
         box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.19);
         pointer-events: auto;
       }
@@ -268,7 +272,6 @@
       .guide-close {
         justify-content: flex-end;
         padding-right: 1.1rem;
-        align-items: flex-start;
       }
       .swipe-hint-wrapper {
         position: relative;
@@ -297,8 +300,18 @@
         text-shadow: 0 1px 3px #0008;
       }
       @media (min-width: 769px) {
+        .swipe-hint-content {
+          width: 22rem;
+          min-height: 8em;
+        }
         .swipe-hint-text {
-          font-size: 1rem;
+          font-size: 1.2rem;
+        }
+        .guide-close {
+          align-items: flex-start;
+        }
+        .guide-anim {
+          padding-left: 3vw;
         }
       }
       .swipe-hint-close {
