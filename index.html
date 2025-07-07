@@ -1,348 +1,433 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>雙層 Swiper Section 內固定按鈕與滑動提示</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100vw;
-      height: 100vh;
-      font-family: 'Inter', sans-serif;
-      background: #000;
-    }
-    body { overflow: hidden; }
-    .swiper-container, .swiper-wrapper, .swiper-slide {
-      width: 100vw;
-      height: 100vh;
-    }
-    .section-indicator {
-      position: absolute;
-      top: 5%;
-      left: 0.5rem;
-      background-color: hsla(0, 0%, 100%, .774);
-      padding: .4rem 0;
-      border-radius: .8rem;
-      font-size: .7rem;
-      font-weight: bold;
-      z-index: 20;
-      box-shadow: 0 1px 6px 0 rgba(0,0,0,.10);
-      color: #222;
-      letter-spacing: 0.01em;
-      width: 1.7rem;
-      height: fit-content;
-      text-align: center;
-      border: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .section-indicator span {
-      display: block;
-      font-size: 1em;
-      line-height: 1.15;
-    }
-    .inner-swiper .swiper-pagination-bullets {
-      bottom: 23% !important;
-      background-color: rgba(0,0,0,0.1);
-      padding: .4rem;
-      border-radius: 1rem;
-      width: fit-content;
-      margin: auto;
-      left: 0;
-      right: 0;
-      height: fit-content;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-    }
-    .inner-swiper .swiper-pagination-bullet {
-      background: rgba(255,255,255,0.5);
-      width: .75rem;
-      height: .75rem;
-      opacity: 1;
-      margin: 0 .25rem !important;
-      border-radius: 50%;
-      transition: all .3s;
-    }
-    .inner-swiper .swiper-pagination-bullet-active {
-      background: #fff;
-      transform: scale(1.2);
-    }
-    .inner-swiper .swiper-button-next,
-    .inner-swiper .swiper-button-prev {
-      color: #F28500;
-      background: rgba(255,255,255,0.93);
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    .inner-swiper .swiper-button-next:after,
-    .inner-swiper .swiper-button-prev:after {
-      font-size: 1.5rem;
-      color: #F28500;
-      font-weight: bold;
-    }
-    .swiper-slide, .inner-swiper .swiper-slide {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-    }
-    .swiper-slide img, .inner-swiper .swiper-slide img {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      display: block;
-      pointer-events: none;
-      user-select: none;
-    }
-    .info-area {
-      height: fit-content;
-      position: absolute;
-      bottom: 0;
-      width: 100vw;
-      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .9));
-      z-index: 30;
-      display: flex;
-      justify-content: flex-end;
-      align-items: end;
-      pointer-events: none;
-    }
-    .main-btn {
-      background: #F86C45;
-      border: none;
-      color: #fff;
-      padding: 1rem 0;
-      width: 270px;
-      border-radius: .7rem;
-      font-size: 1.13rem;
-      font-weight: 600;
-      box-shadow: 0 2px 16px 0 rgba(248,108,69,.13);
-      transition: background .22s;
-      cursor: pointer;
-      outline: none;
-      letter-spacing: 0.03em;
-      text-align: center;
-      margin: 1.2rem 1.4rem 2rem 0;
-      pointer-events: auto;
-    }
-    .main-btn:hover, .main-btn:active {
-      background: #dc5327;
-    }
-    /* ---Guide（往上滑動看更多）--- */
-    .swipe-hint-window {
-      position: fixed;
-      left: 0; top: 0;
-      width: 100vw; height: 100vh;
-      display: flex; justify-content: center; align-items: center;
-      z-index: 9999; background: none; pointer-events: none;
-    }
-    .swipe-hint-content {
-      background: rgba(0,0,0,0.87);
-      border-radius: 2rem;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: stretch;
-      width: 258px;
-      min-width: 258px;
-      height: 108px;
-      min-height: 82px;
-      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.19);
-      pointer-events: auto;
-    }
-    .guide-col {
-      flex: 1 1 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 0;
-      min-height: 82px;
-    }
-    .guide-anim   { justify-content: flex-start;  padding-left: 1.1rem;}
-    .guide-text   { justify-content: center;}
-    .guide-close  { justify-content: flex-end;    padding-right: 1.1rem;}
-    .swipe-hint-img {
-      width: 36px; height: 36px;
-      animation: swipeupbounce 1.35s infinite;
-      filter: drop-shadow(0 2px 12px rgba(0,0,0,0.18));
-    }
-    .swipe-hint-text {
-      color: #fff;
-      font-size: .95rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-align: left;
-      line-height: 1.4;
-      white-space: pre-line;
-      text-shadow: 0 1px 3px #0008;
-    }
-    .swipe-hint-close {
-      background: none;
-      border: none;
-      outline: none;
-      padding: 0;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: auto;
-      width: 38px; height: 38px;
-      opacity: 0.82;
-      transition: opacity .22s;
-    }
-    .swipe-hint-close:hover { opacity: 1; }
-    .swipe-hint-close img { width: 28px; height: 28px; display: block;}
-    @keyframes swipeupbounce {
-      0%, 100% { transform: translateY(0);}
-      50% { transform: translateY(-17px);}
-    }
-    .section2-fixed {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
-    .section2-fixed img {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-  </style>
-</head>
-<body>
-  <!-- Section indicator -->
-  <div class="section-indicator" id="sectionIndicator">
-    <span id="sectionNumber">1</span>
-    <span>/</span>
-    <span id="sectionTotal">2</span>
-  </div>
-  <!-- 外層垂直 Swiper -->
-  <div class="swiper-container outer-swiper">
-    <div class="swiper-wrapper">
-      <!-- Section 1: 內層水平 Swiper -->
-      <div class="swiper-slide" style="position:relative;">
-        <div class="swiper-container inner-swiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="images/section1_image1.jpg" alt="圖1">
-              <div class="info-area">
-                <a href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                   target="_blank" class="main-btn">查看門市</a>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <img src="images/section1_image2.jpg" alt="圖2">
-              <div class="info-area">
-                <a href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                   target="_blank" class="main-btn">查看門市</a>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <img src="images/section1_image3.jpg" alt="圖3">
-              <div class="info-area">
-                <a href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                   target="_blank" class="main-btn">查看門市</a>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <img src="images/section1_image4.jpg" alt="圖4">
-              <div class="info-area">
-                <a href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                   target="_blank" class="main-btn">查看門市</a>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-pagination"></div>
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
-      </div>
-      <!-- Section 2: 單張圖 -->
-      <div class="swiper-slide" style="position:relative;">
-        <div class="section2-fixed">
-          <img src="images/section2_image1.jpg" alt="第二區圖片">
-          <div class="info-area">
-            <a href="https://www.hilife.com.tw/event/hilifesmoothie.html?utm_source=smart-ec&utm_medium=referral"
-               target="_blank" class="main-btn">查看活動頁</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>雙層 Swiper Section 內固定按鈕與滑動提示</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        font-family: 'Inter', sans-serif;
+        background: #000;
+      }
+      body {
+        overflow: hidden;
+      }
+      .swiper-container,
+      .swiper-wrapper,
+      .swiper-slide {
+        width: 100vw;
+        height: 100vh;
+      }
+      .section-indicator {
+        position: absolute;
+        top: 5%;
+        left: 0.5rem;
+        background-color: hsla(0, 0%, 100%, 0.774);
+        padding: 0.4rem 0;
+        border-radius: 0.8rem;
+        font-size: 0.7rem;
+        font-weight: bold;
+        z-index: 20;
+        box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1);
+        color: #222;
+        letter-spacing: 0.01em;
+        width: 1.7rem;
+        height: fit-content;
+        text-align: center;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .section-indicator span {
+        display: block;
+        font-size: 1em;
+        line-height: 1.15;
+      }
+      .inner-swiper .swiper-pagination-bullets {
+        bottom: 23% !important;
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 0.4rem;
+        border-radius: 1rem;
+        width: fit-content;
+        margin: auto;
+        left: 0;
+        right: 0;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+      }
+      .inner-swiper .swiper-pagination-bullet {
+        background: rgba(255, 255, 255, 0.2);
+        width: 8px;
+        height: 8px;
+        opacity: 1;
+        margin: 0 0.25rem !important;
+        border-radius: 50%;
+        transition: all 0.3s;
+      }
+      .inner-swiper .swiper-pagination-bullet-active {
+        background: #fff;
+        transform: scale(1.2);
+      }
+      .inner-swiper .swiper-button-next,
+      .inner-swiper .swiper-button-prev {
+        color: #f28500;
+        background-color: rgba(0, 0, 0, 0.1);
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .inner-swiper .swiper-button-next:after,
+      .inner-swiper .swiper-button-prev:after {
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 1);
+        font-weight: 700;
+      }
+      .swiper-slide,
+      .inner-swiper .swiper-slide {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+      .swiper-slide img,
+      .inner-swiper .swiper-slide img {
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        display: block;
+        pointer-events: none;
+        user-select: none;
+      }
+      .info-area {
+        height: fit-content;
+        position: absolute;
+        bottom: 0;
+        width: 100vw;
+        background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.9));
+        z-index: 30;
+        display: flex;
+        justify-content: flex-end;
+        align-items: end;
+        pointer-events: none;
+      }
+      .main-btn {
+        background: #f86c45;
+        border: none;
+        color: #fff;
+        padding: .05rem 1rem;
+        width: 41vw;
+        height: 2.2rem;
+         line-height: 2.2rem; 
+        border-radius: 0.3rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        box-shadow: 0 2px 16px 0 rgba(248, 108, 69, 0.13);
+        transition: background 0.22s;
+        cursor: pointer;
+        outline: none;
+        letter-spacing: 0.03em;
+        text-align: center;
+        margin: 1.2rem 1.4rem 1rem 0;
+        pointer-events: auto;
+      }
+      .main-btn:hover,
+      .main-btn:active {
+        background: #dc5327;
+      }
+      .info-area a {
+        text-decoration: none;
+      }
+      /* ---Guide（往上滑動看更多）--- */
+      .swipe-hint-window {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        background: none;
+        pointer-events: none;
+      }
+      .swipe-hint-content {
+        background: rgba(0, 0, 0, 0.87);
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: stretch;
+        width: 258px;
+        height: fit-content;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.19);
+        pointer-events: auto;
+      }
+      .guide-col {
+        flex: 1 1 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        min-height: 82px;
+      }
+      .guide-anim {
+        justify-content: flex-start;
+        padding-left: 6vw;
+      }
+      .guide-text {
+        justify-content: center;
+      }
+      .guide-close {
+        justify-content: flex-end;
+        padding-right: 1.1rem;
+      }
+      .swipe-hint-wrapper {
+        position: relative; /* 關鍵！讓 absolute 參考這個容器 */
+        width: 120px; /* 依需求設定 */
+        height: 40px;
+        overflow: hidden;
+      }
 
-  <!-- Guide（往上滑動看更多，258px寬，X為png） -->
-  <div class="swipe-hint-window" id="swipeHint" style="pointer-events:none;">
-    <div class="swipe-hint-content" style="pointer-events:auto;">
-      <div class="guide-col guide-anim">
-        <img src="./swipe-up2.7f6d34b3.png" alt="swipe up" class="swipe-hint-img">
-      </div>
-      <div class="guide-col guide-text">
-        <div class="swipe-hint-text">往上滑動<br>看更多</div>
-      </div>
-      <div class="guide-col guide-close">
-        <button class="swipe-hint-close"
-          onclick="document.getElementById('swipeHint').style.display='none'">
-          <img src="data:image/png;base64,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" alt="close">
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-  <script>
-    // 外層垂直 swiper
-    var outerSwiper = new Swiper('.outer-swiper', {
-      direction: 'vertical',
-      slidesPerView: 1,
-      spaceBetween: 0,
-      mousewheel: true,
-      nested: true,
-      loop: true,
-      on: {
-        slideChange: function() {
-          let total = 2;
-          let sectionNum = (this.activeIndex % 2) + 1;
-          document.getElementById('sectionNumber').textContent = sectionNum;
-          document.getElementById('sectionTotal').textContent = total;
+      .swipe-hint-img {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        width: 31px;
+        height: 31px;
+        animation: swipeupbounce 1.35s infinite;
+        filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.18));
+      }
+      .swipe-hint-text {
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-align: left;
+        line-height: 1.4;
+        white-space: pre-line;
+        text-shadow: 0 1px 3px #0008;
+      }
+      .swipe-hint-close {
+        background: none;
+        border: none;
+        outline: none;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: auto;
+        width: 38px;
+        height: 38px;
+        opacity: 0.82;
+        transition: opacity 0.22s;
+      }
+      .swipe-hint-close:hover {
+        opacity: 1;
+      }
+      .swipe-hint-close img {
+        width: 28px;
+        height: 28px;
+        display: block;
+      }
+      @keyframes swipeupbounce {
+        0% {
+          transform: translateX(-50%) translateY(10px);
+        }
+        50% {
+          transform: translateX(-50%) translateY(0px);
+        }
+        100% {
+          transform: translateX(-50%) translateY(10px);
         }
       }
-    });
+      .section2-fixed {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      .section2-fixed img {
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Section indicator -->
+    <div class="section-indicator" id="sectionIndicator">
+      <span id="sectionNumber">1</span>
+      <span>/</span>
+      <span id="sectionTotal">2</span>
+    </div>
+    <!-- 外層垂直 Swiper -->
+    <div class="swiper-container outer-swiper">
+      <div class="swiper-wrapper">
+        <!-- Section 1: 內層水平 Swiper -->
+        <div class="swiper-slide" style="position: relative">
+          <div class="swiper-container inner-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <img src="images/section1_image1.jpg" alt="圖1" />
+                <div class="info-area">
+                  <a
+                    href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
+                    target="_blank"
+                    class="main-btn"
+                    >查看門市</a
+                  >
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <img src="images/section1_image2.jpg" alt="圖2" />
+                <div class="info-area">
+                  <a
+                    href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
+                    target="_blank"
+                    class="main-btn"
+                    >查看門市</a
+                  >
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <img src="images/section1_image3.jpg" alt="圖3" />
+                <div class="info-area">
+                  <a
+                    href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
+                    target="_blank"
+                    class="main-btn"
+                    >查看門市</a
+                  >
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <img src="images/section1_image4.jpg" alt="圖4" />
+                <div class="info-area">
+                  <a
+                    href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
+                    target="_blank"
+                    class="main-btn"
+                    >查看門市</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div>
+        <!-- Section 2: 單張圖 -->
+        <div class="swiper-slide" style="position: relative">
+          <div class="section2-fixed">
+            <img src="images/section2_image1.jpg" alt="第二區圖片" />
+            <div class="info-area">
+              <a
+                href="https://www.hilife.com.tw/event/hilifesmoothie.html?utm_source=smart-ec&utm_medium=referral"
+                target="_blank"
+                class="main-btn"
+                >查看活動頁</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    // 內層水平 swiper（只初始化 section1 那個）
-    var innerSwiper = new Swiper('.inner-swiper', {
-      loop: true,
-      pagination: { el: '.inner-swiper .swiper-pagination', clickable: true },
-      navigation: {
-        nextEl: '.inner-swiper .swiper-button-next',
-        prevEl: '.inner-swiper .swiper-button-prev',
-      },
-      nested: true,
-    });
+    <!-- Guide（往上滑動看更多，258px寬，X為png） -->
+    <div class="swipe-hint-window" id="swipeHint" style="pointer-events: none">
+      <div class="swipe-hint-content" style="pointer-events: auto">
+        <div class="guide-col guide-anim">
+          <div class="swipe-hint-wrapper">
+            <img
+              src="./swipe-up2.7f6d34b3.png"
+              alt="swipe up"
+              class="swipe-hint-img"
+            />
+          </div>
+        </div>
+        <div class="guide-col guide-text">
+          <div class="swipe-hint-text">往上滑動<br />看更多</div>
+        </div>
+        <div class="guide-col guide-close">
+          <button
+            class="swipe-hint-close"
+            onclick="document.getElementById('swipeHint').style.display='none'"
+          >
+            <img
+              src="data:image/png;base64,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"
+              alt="close"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
 
-    document.addEventListener('DOMContentLoaded', function(){
-      document.getElementById('sectionNumber').textContent = 1;
-      document.getElementById('sectionTotal').textContent = 2;
-      setTimeout(()=>{ 
-        let el = document.getElementById('swipeHint');
-        if(el) el.style.display = 'none';
-      }, 5000);
-    });
-  </script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script>
+      // 外層垂直 swiper
+      var outerSwiper = new Swiper('.outer-swiper', {
+        direction: 'vertical',
+        slidesPerView: 1,
+        spaceBetween: 0,
+        mousewheel: true,
+        nested: true,
+        loop: true,
+        on: {
+          slideChange: function () {
+            let total = 2;
+            let sectionNum = (this.activeIndex % 2) + 1;
+            document.getElementById('sectionNumber').textContent = sectionNum;
+            document.getElementById('sectionTotal').textContent = total;
+          },
+        },
+      });
+
+      // 內層水平 swiper（只初始化 section1 那個）
+      var innerSwiper = new Swiper('.inner-swiper', {
+        loop: true,
+        pagination: { el: '.inner-swiper .swiper-pagination', clickable: true },
+        navigation: {
+          nextEl: '.inner-swiper .swiper-button-next',
+          prevEl: '.inner-swiper .swiper-button-prev',
+        },
+        nested: true,
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('sectionNumber').textContent = 1;
+        document.getElementById('sectionTotal').textContent = 2;
+        setTimeout(() => {
+          let el = document.getElementById('swipeHint');
+          if (el) el.style.display = 'none';
+        }, 5000);
+      });
+    </script>
+  </body>
 </html>
