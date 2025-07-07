@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>嵌套雙層 Swiper 完美修正版</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
+  <style>
+    html, body {
+      margin:0; padding:0; width:100vw; height:100vh; font-family:'Inter',sans-serif; background:#000;
+    }
+    body { overflow: hidden;}
+    .swiper-container, .swiper-wrapper, .swiper-slide { width:100vw; height:100vh; }
+    .section-indicator {
+      position: absolute; top: 5%; left: 0.5rem;
+      background: rgba(255,255,255,0.9); padding: .4rem; border-radius: .7rem;
+      font-size: .92rem; font-weight: bold; z-index: 20;
+      writing-mode: vertical-rl; text-orientation: upright;
+      line-height: 1.2; text-align: center; letter-spacing: 0.05em;
+    }
+    /* 內層水平 Swiper 樣式與點點、箭頭、按鈕同前例 */
+    .inner-swiper .swiper-pagination-bullets {
+      bottom: 23% !important;
+      background-color: rgba(0,0,0,0.1);
+      padding:.4rem; border-radius:1rem; width:fit-content; margin:auto; left:0; right:0;
+      height:fit-content; display:flex; align-items:center; justify-content:center; position:absolute;
+    }
+    .inner-swiper .swiper-pagination-bullet {
+      background:rgba(255,255,255,0.5);
+      width:.75rem; height:.75rem; opacity:1;
+      margin:0 .25rem !important; border-radius:50%; transition:all .3s;
+    }
+    .inner-swiper .swiper-pagination-bullet-active {
+      background:#fff; transform:scale(1.2);
+    }
+    .inner-swiper .swiper-button-next, .inner-swiper .swiper-button-prev {
+      color: #F28500; background: rgba(255,255,255,0.93);
+      width:2.5rem; height:2.5rem; border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,0.2);
+      top:50%; transform:translateY(-50%);
+    }
+    .inner-swiper .swiper-button-next:after, .inner-swiper .swiper-button-prev:after {
+      font-size:1.5rem; color:#F28500; font-weight:bold;
+    }
+    /* 修正：每張圖父元素、圖片都限制 100vw 100vh 不外溢 */
+    .swiper-slide, .inner-swiper .swiper-slide {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    .swiper-slide img, .inner-swiper .swiper-slide img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+    }
+    /* 浮動底部 button 區域 */
+    .floating-btn-area {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      z-index: 30;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      /* 讓它不吃滑動事件 */
+    }
+    .floating-btn-area .main-btn {
+      pointer-events: auto;
+      margin-bottom: 1.7rem;
+      background: #F86C45;
+      border: none;
+      color: #fff;
+      padding: 1rem 0;
+      width: 270px;
+      border-radius: .7rem;
+      font-size: 1.13rem;
+      font-weight: 600;
+      box-shadow: 0 2px 16px 0 rgba(248,108,69,.13);
+      transition: background .22s;
+      cursor: pointer;
+      outline: none;
+      letter-spacing:0.03em;
+      text-align:center;
+      margin-right:0;
+    }
+    .floating-btn-area .main-btn:hover, .floating-btn-area .main-btn:active { background: #dc5327;}
+    /* ---往上滑動畫--- */
+    .swipe-hint-window {
+      position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+      display: flex; justify-content: center; align-items: center; z-index: 9999; background: none;
+    }
+    .swipe-hint-content {
+      background: rgba(0,0,0,0.87);
+      border-radius: 1.5rem; padding: 2rem 2.5rem 1.2rem 2.5rem;
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.2); min-width: 220px;
+    }
+    .swipe-hint-close {
+      position: absolute; top: 0.7rem; right: 1.1rem; font-size: 1.6rem; color: #fff;
+      opacity: 0.7; cursor: pointer; font-weight: bold; z-index: 1;
+    }
+    .swipe-hint-img { width: 48px; height: 48px; animation: swipeupbounce 1.35s infinite; margin-bottom: 0.4rem;
+      filter: drop-shadow(0 2px 12px rgba(0,0,0,0.18));
+    }
+    .swipe-hint-text { color: #fff; font-size: 1.12rem; letter-spacing: 0.04em; margin-top: 0.2rem; font-weight: 500; text-align: center;}
+    @keyframes swipeupbounce {
+      0%, 100% { transform: translateY(0);}
+      50% { transform: translateY(-17px);}
+    }
+    /* 修正 Section2 滑動範圍 */
+    .section2-fixed {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .section2-fixed img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      position: absolute;
+      top: 0; left: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Section indicator -->
+  <div class="section-indicator" id="sectionIndicator">1<br>/ 2</div>
+  <!-- 外層垂直 Swiper -->
+  <div class="swiper-container outer-swiper">
+    <div class="swiper-wrapper">
+      <!-- Section 1: 內層水平 Swiper -->
+      <div class="swiper-slide" style="position:relative;">
+        <div class="swiper-container inner-swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="images/section1_image1.jpg" alt="圖1">
+            </div>
+            <div class="swiper-slide">
+              <img src="images/section1_image2.jpg" alt="圖2">
+            </div>
+            <div class="swiper-slide">
+              <img src="images/section1_image3.jpg" alt="圖3">
+            </div>
+            <div class="swiper-slide">
+              <img src="images/section1_image4.jpg" alt="圖4">
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+        <!-- section 1 浮動 button -->
+        <div class="floating-btn-area section1-btn">
+          <a href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
+             target="_blank" class="main-btn">查看門市</a>
+        </div>
+      </div>
+      <!-- Section 2: 單張圖（不可捲動） -->
+      <div class="swiper-slide" style="position:relative;">
+        <div class="section2-fixed">
+          <img src="images/section2_image1.jpg" alt="第二區圖片">
+        </div>
+        <!-- section 2 浮動 button -->
+        <div class="floating-btn-area section2-btn" style="display:none;">
+          <a href="https://www.hilife.com.tw/event/hilifesmoothie.html?utm_source=smart-ec&utm_medium=referral"
+             target="_blank" class="main-btn">查看活動頁</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Swipe Hint Overlay -->
+  <div class="swipe-hint-window" id="swipeHint">
+    <div class="swipe-hint-content">
+      <span class="swipe-hint-close" onclick="document.getElementById('swipeHint').style.display='none'">&times;</span>
+      <img src="./swipe-up2.7f6d34b3.png" alt="swipe up" class="swipe-hint-img">
+      <div class="swipe-hint-text">往上滑動<br>看更多</div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+  <script>
+    // 外層垂直 swiper
+    var outerSwiper = new Swiper('.outer-swiper', {
+      direction: 'vertical',
+      slidesPerView: 1,
+      spaceBetween: 0,
+      mousewheel: true,
+      nested: true,
+      loop: true,
+      on: {
+        slideChange: function() {
+          let total = 2;
+          let sectionNum = (this.activeIndex % 2) + 1;
+          document.getElementById('sectionIndicator').innerHTML = sectionNum + '<br>/ ' + total;
+          // 控制 button 顯示
+          document.querySelector('.section1-btn').style.display = (sectionNum === 1) ? 'flex' : 'none';
+          document.querySelector('.section2-btn').style.display = (sectionNum === 2) ? 'flex' : 'none';
+        }
+      }
+    });
+    // 內層水平 swiper（只初始化 section1 那個）
+    var innerSwiper = new Swiper('.inner-swiper', {
+      loop: true,
+      pagination: { el: '.inner-swiper .swiper-pagination', clickable: true },
+      navigation: {
+        nextEl: '.inner-swiper .swiper-button-next',
+        prevEl: '.inner-swiper .swiper-button-prev',
+      },
+      nested: true,
+    });
+    document.addEventListener('DOMContentLoaded', function(){
+      document.getElementById('sectionIndicator').innerHTML = '1<br>/ 2';
+      document.querySelector('.section1-btn').style.display = 'flex';
+      document.querySelector('.section2-btn').style.display = 'none';
+      setTimeout(()=>{ 
+        let el = document.getElementById('swipeHint');
+        if(el) el.style.display = 'none';
+      }, 5000);
+    });
+  </script>
+</body>
+</html>
