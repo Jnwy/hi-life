@@ -505,7 +505,7 @@
         on: {
           slideChange: function () {
             let total = 2;
-            let sectionNum = (this.activeIndex % 2) + 1;
+            let sectionNum = this.realIndex + 1;
             document.getElementById('sectionNumber').textContent = sectionNum;
             document.getElementById('sectionTotal').textContent = total;
           },
