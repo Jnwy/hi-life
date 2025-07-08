@@ -16,6 +16,9 @@
         padding: 0;
         width: 100vw;
         height: 100vh;
+        height: 100dvh;
+        min-height: 100dvh;
+        max-height: 100dvh;
         font-family: 'Inter', sans-serif;
         background: #fff;
         overflow: hidden;
@@ -23,6 +26,9 @@
       #app {
         width: 100vw;
         height: 100vh;
+        height: 100dvh;
+        min-height: 100dvh;
+        max-height: 100dvh;
         background: #fff;
         position: relative;
       }
@@ -31,11 +37,13 @@
         #app {
           width: 100vw;
           height: 100vh;
+          height: 100dvh;
           display: block;
         }
         .main-content-wrap {
           width: 100vw;
           height: 100vh;
+          height: 100dvh;
           margin: 0 auto;
           background: #fff;
           position: relative;
@@ -50,25 +58,42 @@
         .section2-fixed {
           width: 100vw !important;
           height: 100vh !important;
+          height: 100dvh !important;
         }
         .swiper-slide img,
         .section2-fixed img {
           width: 100vw;
           height: 100vh;
+          height: 100dvh;
           object-fit: cover; /* 滿版裁切 */
           display: block;
         }
         .info-area {
-          width: 100%; /* 修正原本 100vw 可能超出問題 */
-          padding-right: 1.2rem; /* 增加右側內距，避免主按鈕貼邊 */
+          width: 100%;
+          padding-right: max(
+            0.1rem,
+            env(safe-area-inset-right)
+          ); /* 幾乎貼邊，兼容安全區 */
           box-sizing: border-box;
+          padding-bottom: 4.5rem;
+          padding-bottom: max(
+            4.5rem,
+            env(safe-area-inset-bottom)
+          ); /* 兼容不支援 env() 的 Android */
         }
         .main-btn {
           width: auto;
           min-width: 40vw;
-          max-width: 90vw;
-          margin: 1.2rem 0 1rem 0; /* 移除右側 margin，避免超出 */
+          margin: 1.2rem 0 0 0; /* 右側完全貼邊 */
           display: block;
+        }
+      }
+      @supports (padding-bottom: env(safe-area-inset-bottom)) {
+        @media (max-width: 768px) {
+          .info-area {
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-right: env(safe-area-inset-right);
+          }
         }
       }
       /* 桌機、平板：內容高度=視窗高度，寬度依比例，無圓角無陰影。圖片永遠100%高自動拉寬，不管多小都放大 */
@@ -226,7 +251,7 @@
         outline: none;
         letter-spacing: 0.03em;
         text-align: center;
-        margin: 1.2rem 1.4rem 1rem 0;
+        margin: 1.2rem 0.5rem 1rem 0;
         pointer-events: auto;
       }
       .main-btn:hover,
@@ -464,7 +489,7 @@
                     href="https://www.hilife.com.tw/event/hilifesmoothie.html?utm_source=smart-ec&utm_medium=referral"
                     target="_blank"
                     class="main-btn"
-                    >查看活動頁</a
+                    >點我看更多</a
                   >
                 </div>
               </div>
