@@ -32,7 +32,6 @@
         background: #fff;
         position: relative;
       }
-      /* 手機：內容/圖片皆填滿，圖片 cover 可裁切 */
       @media (max-width: 768px) {
         #app {
           width: 100vw;
@@ -65,26 +64,20 @@
           width: 100vw;
           height: 100vh;
           height: 100dvh;
-          object-fit: cover; /* 滿版裁切 */
+          object-fit: cover;
           display: block;
         }
         .info-area {
           width: 100%;
-          padding-right: max(
-            0.1rem,
-            env(safe-area-inset-right)
-          ); /* 幾乎貼邊，兼容安全區 */
+          padding-right: max(0.1rem, env(safe-area-inset-right));
           box-sizing: border-box;
           padding-bottom: 4.5rem;
-          padding-bottom: max(
-            4.5rem,
-            env(safe-area-inset-bottom)
-          ); /* 兼容不支援 env() 的 Android */
+          padding-bottom: max(4.5rem, env(safe-area-inset-bottom));
         }
         .main-btn {
           width: auto;
           min-width: 40vw;
-          margin: 1.2rem 0 0 0; /* 右側完全貼邊 */
+          margin: 1.2rem 0 0 0;
           display: block;
         }
       }
@@ -96,7 +89,6 @@
           }
         }
       }
-      /* 桌機、平板：內容高度=視窗高度，寬度依比例，無圓角無陰影。圖片永遠100%高自動拉寬，不管多小都放大 */
       @media (min-width: 769px) {
         #app {
           width: 100vw;
@@ -108,7 +100,7 @@
         }
         .main-content-wrap {
           height: 100vh;
-          width: calc(100vh * 9 / 16); /* 修改這裡可換圖片比例 */
+          width: calc(100vh * 9 / 16);
           max-width: 100vw;
           max-height: 100vh;
           background: #fff;
@@ -429,98 +421,59 @@
         </div> -->
         <div class="swiper-container outer-swiper">
           <div class="swiper-wrapper">
+            <!-- Section 1：button為 "點我看更多" -->
             <div class="swiper-slide" style="position: relative">
               <div class="swiper-container inner-swiper">
                 <div class="swiper-wrapper">
                   <div class="swiper-slide">
                     <img src="images/section_01/image_1.jpg" alt="圖1" />
-                      <div class="info-area">
-                      <a
-                        href="https://www.hilife.com.tw/event/hilifesmoothie.html?utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >點我看更多</a
-                      >
-                    </div>
-
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_01/image_2.jpg" alt="圖2" />
-                        <div class="info-area">
-                      <a
-                        href="https://www.hilife.com.tw/event/hilifesmoothie.html?utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >點我看更多</a
-                      >
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_01/image_3.jpg" alt="圖3" />
-                        <div class="info-area">
-                      <a
-                        href="https://www.hilife.com.tw/event/hilifesmoothie.html?utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >點我看更多</a
-                      >
                   </div>
                 </div>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
               </div>
+              <div class="info-area">
+                <a
+                  href="https://www.hilife.com.tw/event/hilifesmoothie.html?utm_source=smart-ec&utm_medium=referral"
+                  target="_blank"
+                  class="main-btn"
+                >點我看更多</a>
+              </div>
             </div>
+            <!-- Section 2~4：button為 "查看門市" -->
             <div class="swiper-slide" style="position: relative">
               <div class="swiper-container inner-swiper">
                 <div class="swiper-wrapper">
                   <div class="swiper-slide">
                     <img src="images/section_02/image_1.jpg" alt="圖1" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_02/image_2.jpg" alt="圖2" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_02/image_3.jpg" alt="圖3" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_02/image_4.jpg" alt="圖4" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                 </div>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
+              </div>
+              <div class="info-area">
+                <a
+                  href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
+                  target="_blank"
+                  class="main-btn"
+                >查看門市</a>
               </div>
             </div>
             <div class="swiper-slide" style="position: relative">
@@ -528,52 +481,27 @@
                 <div class="swiper-wrapper">
                   <div class="swiper-slide">
                     <img src="images/section_03/image_1.jpg" alt="圖1" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_03/image_2.jpg" alt="圖2" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_03/image_3.jpg" alt="圖3" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_03/image_4.jpg" alt="圖4" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                 </div>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
+              </div>
+              <div class="info-area">
+                <a
+                  href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
+                  target="_blank"
+                  class="main-btn"
+                >查看門市</a>
               </div>
             </div>
             <div class="swiper-slide" style="position: relative">
@@ -581,52 +509,27 @@
                 <div class="swiper-wrapper">
                   <div class="swiper-slide">
                     <img src="images/section_04/image_1.jpg" alt="圖1" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_04/image_2.jpg" alt="圖2" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_04/image_3.jpg" alt="圖3" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                   <div class="swiper-slide">
                     <img src="images/section_04/image_4.jpg" alt="圖4" />
-                    <div class="info-area">
-                      <a
-                        href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
-                        target="_blank"
-                        class="main-btn"
-                        >查看門市</a
-                      >
-                    </div>
                   </div>
                 </div>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
+              </div>
+              <div class="info-area">
+                <a
+                  href="https://www.google.com/maps/d/u/1/viewer?mid=1YSGgwZGrOTQii20Mi7uNV3Bsim7gFxQ&ll=24.230356619579297%2C120.71215756115409&z=12&utm_source=smart-ec&utm_medium=referral"
+                  target="_blank"
+                  class="main-btn"
+                >查看門市</a>
               </div>
             </div>
           </div>
@@ -666,7 +569,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script>
-      // 外層垂直 swiper
       var outerSwiper = new Swiper('.outer-swiper', {
         direction: 'vertical',
         slidesPerView: 1,
@@ -676,12 +578,9 @@
         loop: true,
         on: {
           slideChange: function () {
-            // 移除頁碼顯示相關 JS，不影響滑動功能
           },
         },
       });
-
-      // 內層水平 swiper
       var innerSwipers = new Swiper('.inner-swiper', {
         loop: true,
         pagination: { el: '.swiper-pagination', clickable: true },
@@ -691,9 +590,7 @@
         },
         nested: true,
       });
-
       document.addEventListener('DOMContentLoaded', function () {
-        // 移除頁碼初始化 JS，不影響滑動功能
         setTimeout(() => {
           let el = document.getElementById('swipeHint');
           if (el) el.style.display = 'none';
